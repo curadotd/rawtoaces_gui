@@ -99,6 +99,9 @@ else
   cd rawtoaces_gui
 fi
 
+#install python dependencies
+pip install pyside6
+
 mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
 
 cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
