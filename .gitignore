@@ -1,2 +1,4 @@
 #ignore pycache folder
 python/__pycache__/
+#ignore .DS_Store
+.DS_Store

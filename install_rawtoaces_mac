@@ -1,0 +1,97 @@
+#!/bin/bash
+##Build and install raw to aces for macOS
+##https://github.com/AcademySoftwareFoundation/rawtoaces
+##Requires homebrew to be installed
+##https://brew.sh/
+##Requires libraw to be installed => 0.21.0
+##Requires ceres-solver to be installed = 1.14.0
+
+##MacOs install dependencies
+brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw ceres-solver
+
+#Get rawtoaces source
+if [ -d rawtoaces ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd rawtoaces
+  git pull
+else
+  git clone https://github.com/ampas/rawtoaces
+  cd rawtoaces
+fi
+#create build directory
+mkdir _build && cd _build
+
+#Build extra dependencies
+
+#Ceres Solver build and install.
+if [ -d raw_to_aces_deps_ceres_solver/install ]; then
+  echo Ceres-Solver already installed, will skip.
+else
+  echo Ceres Solver will now be complied and installed.
+  if [ -d raw_to_aces_deps_ceres_solver/src ]; then
+    echo git reposiotry already cloned, will check for updates.
+    cd raw_to_aces_deps_ceres_solver/src
+    git pull
+  else
+    mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
+    git clone https://github.com/ceres-solver/ceres-solver.git src
+    cd src
+    #Change to version 1.14.0
+    git checkout 1.14.0
+  fi
+
+  #unlink ceres-solver from homebrew
+  brew unlink ceres-solver
+
+  mkdir build_ceres && cd build_ceres
+
+  cmake \
+  -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/ceres-solver/1.14.0 \
+  -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
+  ..
+
+  make -j 8
+
+  make install
+
+  #link ceres-solver to homebrew
+  brew link ceres-solver
+fi
+
+cd ../../../
+
+#Raw to Aces build and install.
+
+cd ../../../../
+
+cmake \
+-DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/opt/homebrew/Cellar/gcc/12.2.0/bin/gcc-12 \
+-D_IlmBase_HINT_LIB=/opt/homebrew/opt/ilmbase/lib \
+-D_IlmBase_HINT_INCLUDE=/opt/homebrew/opt/ilmbase/include \
+-D_libraw_HINT_LIB=/opt/homebrew/opt/libraw/install/lib \
+-D_libraw_HINT_INCLUDE=/opt/homebrew/opt/libraw/install/include \
+-DCERES_INCLUDE_DIRS=/opt/homebrew/opt/ceres-solver/include \
+-DCERES_LIBRARY_DIRS=/opt/homebrew/opt/ceres-solver/lib \
+-DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/rawtoaces/master ..
+
+make
+
+make install
+
+#link rawtoaces to homebrew
+brew link rawtoaces
+
+#set some needed environment variables
+
+echo "export LD_LIBRARY_PATH=/opt/homebrew/lib" >> ~/.zprofile
+echo "export LD_INCLUDE_DIR=/opt/homebrew/include:/opt/homebrew/include/rawtoaces" >> ~/.zprofile
+echo "export AMPAS_DATA_PATH=/opt/homebrew/include/rawtoaces/data" >> ~/.zprofile
+
+
+#install rawtoaces_gui for macOS
+mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
+
+cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
+cp -r bin /opt/homebrew/Cellar/rawtoaces_gui/master
+
+brew link rawtoaces_gui

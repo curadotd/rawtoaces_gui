@@ -1,0 +1,12 @@
+#!/bin/bash
+#run rawtoaces_gui.py
+
+#set path to main.py
+#check if running on mac
+if [ "$(uname)" == "Darwin" ]; then
+    export PATH_TO_MAIN=/opt/homebrew/Cellar/rawtoaces_gui/master/python
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # Do something under GNU/Linux platform
+fi
+
+python $PATH_TO_MAIN/main.py

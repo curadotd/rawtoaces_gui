@@ -9,7 +9,7 @@ import subprocess
 class RawtoAcesGui(QtWidgets.QMainWindow):
     def __init__(self):
         super(RawtoAcesGui, self).__init__()
-        self.setWindowTitle("Convert to EXR")
+        self.setWindowTitle("Raw to ACES exr")
         self.setGeometry(800, 200, 800, 200)
 
         main_window = QtWidgets.QVBoxLayout()
@@ -37,7 +37,7 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
 
         sequence_label = QtWidgets.QLabel("Sequence:")
         self.sequence = QtWidgets.QCheckBox()
-        create_exr_subfolder_label = QtWidgets.QLabel("Create ´EXR´ Subfolder:")
+        create_exr_subfolder_label = QtWidgets.QLabel("Create `exr` Subfolder:")
         self.create_exr_subfolder_extention = QtWidgets.QCheckBox()
         change_output_image_name_label = QtWidgets.QLabel("Change Output Image Name:")
         self.change_output_image_name = QtWidgets.QLineEdit()
