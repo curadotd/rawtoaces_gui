@@ -6,9 +6,9 @@ from PySide6 import QtWidgets, QtCore
 import os
 import subprocess
 
-class ConvertWidget(QtWidgets.QMainWindow):
+class RawtoAcesGui(QtWidgets.QMainWindow):
     def __init__(self):
-        super(ConvertWidget, self).__init__()
+        super(RawtoAcesGui, self).__init__()
         self.setWindowTitle("Convert to EXR")
         self.setGeometry(800, 200, 800, 200)
 

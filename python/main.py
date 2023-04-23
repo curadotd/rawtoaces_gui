@@ -1,11 +1,11 @@
-from PySide6.QtWidgets import QApplication, QWidget
-from convertwidget import ConvertWidget
+from PySide6.QtWidgets import QApplication
+from rawtoaces_gui import RawtoAcesGui
 
 import sys
 
 app = QApplication(sys.argv)
 
-window = ConvertWidget()
+window = RawtoAcesGui()
 window.show()
 
 app.exec()
