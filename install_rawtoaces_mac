@@ -15,7 +15,7 @@ if [ -d rawtoaces ]; then
   cd rawtoaces
   git pull
 else
-  git clone https://github.com/ampas/rawtoaces
+  git clone https://github.com/mjbacurado/rawtoaces.git
   cd rawtoaces
 fi
 #create build directory
@@ -89,6 +89,16 @@ echo "export AMPAS_DATA_PATH=/opt/homebrew/include/rawtoaces/data" >> ~/.zprofil
 
 
 #install rawtoaces_gui for macOS
+#Get rawtoaces_gui source
+if [ -d rawtoaces_gui ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd rawtoaces_gui
+  git pull
+else
+  git clone https://github.com/mjbacurado/rawtoaces_gui.git
+  cd rawtoaces_gui
+fi
+
 mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
 
 cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
