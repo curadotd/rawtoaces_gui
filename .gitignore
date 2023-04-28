@@ -6,3 +6,5 @@ python/__pycache__/
 build/
 #dist folder
 dist/
+#.spec file
+*.spec

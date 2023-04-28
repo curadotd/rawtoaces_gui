@@ -7,12 +7,29 @@
 ##Requires ceres-solver to be installed = 1.14.0
 
 ##MacOs install dependencies
-brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw ceres-solver
+
+which -s brew
+if [[ $? != 0 ]] ; then
+    # Install Homebrew
+    echo You will need to install homebrew first.
+    echo https://brew.sh/
+    exit
+fi
+
+brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw gflags
+
+#Uninstall metis, openblas and suite-sparse, they cause issues with ceres-solver
+#brew uninstall metis openblas suite-sparse ceres-solver
+
+echo "Choose a path to build raw to aces and some dependencies. For example: /Users/username/git"
+read -p "Enter path to build directory: " build_path
+
+cd $build_path
 
 #Get rawtoaces source
-if [ -d rawtoaces ]; then
+if [ -d $build_path/rawtoaces ]; then
   echo git reposiotry already cloned, will check for updates.
-  cd rawtoaces
+  cd $build_path/rawtoaces
   git pull
 else
   git clone https://github.com/mjbacurado/rawtoaces.git
@@ -24,13 +41,13 @@ mkdir _build && cd _build
 #Build extra dependencies
 
 #Ceres Solver build and install.
-if [ -d raw_to_aces_deps_ceres_solver/install ]; then
+if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install ]; then
   echo Ceres-Solver already installed, will skip.
 else
   echo Ceres Solver will now be complied and installed.
-  if [ -d raw_to_aces_deps_ceres_solver/src ]; then
+  if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
     echo git reposiotry already cloned, will check for updates.
-    cd raw_to_aces_deps_ceres_solver/src
+    cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
     git pull
   else
     mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
@@ -58,11 +75,9 @@ else
   brew link ceres-solver
 fi
 
-cd ../../../
+cd $build_path/rawtoaces/_build
 
 #Raw to Aces build and install.
-
-cd ../../../../
 
 cmake \
 -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/opt/homebrew/Cellar/gcc/12.2.0/bin/gcc-12 \
@@ -74,7 +89,7 @@ cmake \
 -DCERES_LIBRARY_DIRS=/opt/homebrew/opt/ceres-solver/lib \
 -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/rawtoaces/master ..
 
-make
+make -j 4
 
 make install
 

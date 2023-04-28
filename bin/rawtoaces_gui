@@ -7,6 +7,9 @@ if [ "$(uname)" == "Darwin" ]; then
     export PATH_TO_MAIN=/opt/homebrew/Cellar/rawtoaces_gui/master/python
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # Do something under GNU/Linux platform
+    export PATH_TO_MAIN=/opt/homebrew/Cellar/rawtoaces_gui/master/python
 fi
 
-python $PATH_TO_MAIN/main.py
+cd $PATH_TO_MAIN
+#run main.py
+python ./main.py
