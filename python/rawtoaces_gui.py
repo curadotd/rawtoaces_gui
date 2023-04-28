@@ -1,5 +1,9 @@
 """
+@package rawtoaces_gui.convert
+@brief This module contains the functions to convert the images, rename and stor in a exr subfolder.
 
+@author Marco Curado
+@email mjbacurado@gmail.com
 """
 from PySide6 import QtWidgets, QtCore, QtGui
 
@@ -22,7 +26,11 @@ def simple_percent_parser(output):
 
 
 class RawtoAcesGui(QtWidgets.QMainWindow):
+    """Class to create the GUI
+    """
     def __init__(self):
+        """Constructor
+        """
         super(RawtoAcesGui, self).__init__()
 
         self.setWindowTitle("Raw to ACES exr")
@@ -129,6 +137,8 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         self.setCentralWidget(widget)
     
     def wb_method_tip(self):
+        """White balance factor calculation method
+        """
         method_tip = """
         White balance factor calculation method
         0=white balance using file metadata
@@ -142,6 +152,8 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         return method_tip
 
     def mat_method_tip(self):
+        """IDT matrix calculation method
+        """
         method_tip = """
         IDT matrix calculation method
         0=Calculate matrix from camera spec sens
@@ -154,6 +166,8 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         return method_tip
 
     def raw_conversion_options_tip(self):
+        """Raw conversion options
+        """
         method_tip = """
         Raw conversion options\n add as need followed by a space, for example (-c 0.75 -C -k 1)
         -c float                Set adjust maximum threshold (default = 0.75)
@@ -180,32 +194,21 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         return method_tip
 
     def onImportImageClicked(self):
+        """Open file dialog to select image to convert
+        """
         file_path = QtWidgets.QFileDialog.getOpenFileName(self, "Open File", "", "All Files (*)")
 
         if file_path:
             self.file_path.setText(file_path[0])
 
-    def runShellScript(self):
-        if self.sequence.isChecked():
-            command_to_run = self.sequenceConvertComand()
-        if self.change_output_image_name.text() != "":
-            command_to_run = self.sequenceChangeImageName()
-        if self.create_exr_subfolder_extention.isChecked():
-                command_to_run = self.createSubfolder()
-
-        else:
-            command_to_run = self.convertComand()
-            if self.change_output_image_name.text() != "":
-                command_to_run = self.changeImageName()
-            if self.create_exr_subfolder_extention.isChecked():
-                command_to_run = self.createSubfolder()
-
-        return command_to_run
-
     def onCloseClicked(self, event):
+        """Close the window
+        """
         self.close()
 
     def onRawtoAcesClicked(self):
+        """Funcrion to open rawtoaces help
+        """
         rawtoaces_help = QtWidgets.QDialog(self)
         rawtoaces_help.setWindowTitle("RawtoAces Help")
         rawtoaces_help.resize(600, 600)
@@ -223,6 +226,8 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         rawtoaces_help.exec_()
 
     def rawToAcesHelp(self):
+        """RawtoAces help text
+        """
         raw_to_aces_help ="""
         rawtoaces - convert RAW digital camera files to ACES
 
@@ -285,6 +290,8 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         return raw_to_aces_help
     
     def onConvertClicked(self):
+        """Function to run a windo to show the progress rawtoaces
+        """
 
         self.p = None
 
@@ -316,12 +323,17 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         self.text.appendPlainText(s)
 
     def start_process(self):
+        """Function to start the rawtoaces process
+        """
+
+        # Create the subprocess, making sure to store it as a member variable
         commands = "convert.py --wb-method {0} --mat-method {1} -v {2} {3}".format(
             self.wb_method.currentText(), 
             self.mat_method.currentText(),
             self.raw_conversion_options.text(), 
             self.file_path.text())
         
+        # Add optional arguments
         if self.create_exr_subfolder_extention.isChecked():
             commands = commands + " --create-exr-subfolder"
         if self.sequence.isChecked():
@@ -329,6 +341,7 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         if self.change_output_image_name != "":
             commands = commands + " --change-output-image-name {0}".format(self.change_output_image_name.text())
 
+        # Run the process
         if self.p is None:  # No process running.
             self.message("Executing process")
             self.p = QtCore.QProcess()  # Keep a reference to the QProcess (e.g. on self) while it's running.
@@ -338,8 +351,9 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
             self.p.finished.connect(self.process_finished)  # Clean up once complete.
             self.p.start("python3", commands.split())
             
-
     def handle_stderr(self):
+        """Function to handle the stderr of the process
+        """
         data = self.p.readAllStandardError()
         stderr = bytes(data).decode("utf8")
         # Extract progress if it is in the data.
@@ -349,11 +363,15 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
             self.message(stderr)
 
     def handle_stdout(self):
+        """Function to handle the stdout of the process
+        """
         data = self.p.readAllStandardOutput()
         stdout = bytes(data).decode("utf8")
         self.message(stdout)
 
     def handle_state(self, state):
+        """Function to handle the state of the process
+        """
         states = {
             QtCore.QProcess.NotRunning: 'Not running',
             QtCore.QProcess.Starting: 'Starting',
@@ -363,6 +381,8 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         self.message(f"State changed: {state_name}")
 
     def process_finished(self):
+        """Function to handle the process when it is finished
+        """
         self.message("Process finished.")
         self.p = None
         self.progress_window.close()
