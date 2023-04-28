@@ -11,6 +11,7 @@ from rawtoaces_gui import RawtoAcesGui
 
 import sys
 
+
 #Here we create the app and the window
 app = QApplication(sys.argv)
 

@@ -5,11 +5,10 @@
 @author Marco Curado
 @email mjbacurado@gmail.com
 """
-from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6 import QtWidgets, QtCore
 
-import os
-import subprocess
 import re
+
 
 # A regular expression, to extract the % complete.
 progress_re = re.compile("Total complete: (\d+)%")

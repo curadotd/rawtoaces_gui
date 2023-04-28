@@ -2,3 +2,7 @@
 python/__pycache__/
 #ignore .DS_Store
 .DS_Store
+#build folder
+build/
+#dist folder
+dist/

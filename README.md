@@ -11,4 +11,6 @@ They might be outated as this was created 6 years ago!!!
 
 Qt build with Pyside6
 
+Binary file available.
+
 ...More to come...
