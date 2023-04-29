@@ -8,11 +8,10 @@
 5. [Usage](#usage)
 
 ## Introduction
-The RAW to ACES Gui, is a helper tool to converts digital camera RAW files to ACES container files containing image data encoded according to the Academy Color Encoding Specification (ACES) as specified in [SMPTE 2065-1](http://ieeexplore.ieee.org/document/7289895/).  Using the underlining software package from https://github.com/AcademySoftwareFoundation/rawtoaces.git.
+The RAW to ACES Gui, is a helper tool to convert digital camera RAW files to ACES container files containing image data encoded according to the Academy Color Encoding Specification (ACES) as specified in [SMPTE 2065-1](http://ieeexplore.ieee.org/document/7289895/).  Using the underlining software package from https://github.com/AcademySoftwareFoundation/rawtoaces.git.
 
-1. The gui allows the user to input an image, then selct a few options, like convert into a sequence of files, rename the files with padding and move them into a exr subfolder.
-
-The output image complies with the ACES Container specification [(SMPTE S2065-4)](http://ieeexplore.ieee.org/document/7290441).
+1. The gui allows the user to input an image, then select a few options, like convert into a sequence of files, rename the files with padding and move them into a exr subfolder.
+   The output image complies with the ACES Container specification [(SMPTE S2065-4)](http://ieeexplore.ieee.org/document/7290441).
 
 The original source code for rawtoaces was forked to add support to the latest version of libraw v0.21.1, add compatibility to CR3 canon files for example.
 Provided here: https://github.com/mjbacurado/rawtoaces.git
@@ -293,11 +292,11 @@ https://github.com/mjbacurado/rawtoaces#installation
 
 ### Overview
 
-Input an Raw Camera image for example a .CR3 image file in the file path path slot.
+Input a Raw Camera image for example a .CR3 image file in the file path slot.
 
-Choose if you would like create a sequence, create a exr subfolder and or change the image name.
+Choose if you would like to create a sequence, create a exr subfolder and or change the image name.
 
-Then choise the conversion options for `rawtoaces`.
+Then choose the conversion options for `rawtoaces`.
 
 `rawtoaces` uses one of three methods to convert RAW image files to ACES.
 
