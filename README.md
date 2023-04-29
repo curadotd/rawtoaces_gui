@@ -138,14 +138,156 @@ https://github.com/mjbacurado/rawtoaces#installation
     ```
 
 
-* Redhat
+* RockyLinux
 	
-	```sh
-	$ yum install libraw1394-devel
-	```
+    #enable powertools
+    ```sh
+    sudo dnf install dnf-plugins-core
+    ```
+    ```sh
+    sudo dnf install epel-release
+    ```
+    ```sh
+    sudo dnf update
+    ```
+    ```sh
+    dnf config-manager --enable crb
+    ```
+    ```sh
+    sudo dnf install cmake autoconf automake libtool pkg-config boost-devel \
+    gcc glog-devel gflags-devel openexr-devel eigen3-devel g++ libjpeg-devel \
+    libjasper-devel lcms2-devel suitesparse-devel metis-devel tbb-devel blas-devel lapack-devel openblas-serial
+    ```
+    ```sh
+    git clone https://github.com/mjbacurado/rawtoaces.git
+    ```
+    ```sh
+    cd rawtoaces
+    ```
+    ```sh
+    mkdir _build && cd _build
+    ```
+    ```sh
+    mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
+    ```
+    ```sh
+    git clone https://github.com/LibRaw/LibRaw.git src
+    ```
+    ```sh
+    cd src
+    ```
+    ```sh
+    autoreconf --install
+    ```
+    ```sh
+    ./configure
+    ```
+    ```sh
+    make -j 4
+    ```
+    ```sh
+    make install
+    ```
+    ```sh
+    mkdir raw_to_aces_deps_aces_container && cd raw_to_aces_deps_aces_container
+    ```
+    ```sh
+    git clone https://github.com/miaoqi/aces_container.git src
+    ```
+    ```sh
+    cd src
+    ```
+    ```sh
+    mkdir build && cd build
+    ```
+    ```sh
+    cmake ..
+    ```
+    ```sh
+    make -j 4
+    ```
+    ```sh
+    sudo make install
+    ```
+    ```sh
+    mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
+    ```
+    ```sh
+    git clone https://github.com/ceres-solver/ceres-solver.git src
+    ```
+    ```sh
+    cd src
+    ```
+    #Change to version 1.14.0
+    ```sh
+    git checkout 1.14.0
+    ```
+    ```sh
+    mkdir build_ceres && cd build_ceres
+    ```
+    ```sh
+    cmake \
+    -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
+    ..
+    ```
+    ```sh
+    make -j 8
+    ```
+    ```sh
+    make install
+    ```
+    ```sh
+    cd $build_path/rawtoaces/_build
+    ```
+    #Raw to Aces build and install.
+    ```sh
+    cmake \
+    -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
+    -D_IlmBase_HINT_LIB=/usr/lib64 \
+    -DIlmBase_INCLUDE_DIR=/usr/include/Imath \
+    -D_libraw_HINT_LIB=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/lib \
+    -D_libraw_HINT_INCLUDE=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/include/libraw \
+    -DCERES_INCLUDE_DIRS=/usr/include/ceres \
+    -DCERES_LIBRARY_DIRS=/usr/lib64 \
+    -DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
+    -DAcesContainer_LIBRARY_DIRS=/usr/lib \
+    ..
+    ```
+    ```sh
+    make -j 4
+    ```
+    ```sh
+    suod make install
+    ```
 
+    #set some needed environment variables
+    ```sh
+    echo "export LD_LIBRARY_PATH=/usr/local/lib" >> ~/.zprofile
+    echo "export LD_INCLUDE_DIR=/usr/local/include/rawtoaces" >> ~/.zprofile
+    echo "export AMPAS_DATA_PATH=/usr/local/rawtoaces/data" >> ~/.zprofile
+    ```
 
+    cd $build_path/rawtoaces/_build
 
+    #install rawtoaces_gui for macOS
+    #Get rawtoaces_gui source
+    ```sh
+    git clone https://github.com/mjbacurado/rawtoaces_gui.git
+    ```
+    ```sh
+    cd rawtoaces_gui
+    ```
+
+    #install python dependencies
+    ```sh
+    pip install pyside6
+    ```
+    ```sh
+    cp -r python /usr/local/rawtoaces_gui
+    ```
+    ```sh
+    cp -r bin /usr/local/bin
+    ```sh
 
 ## Usage
 

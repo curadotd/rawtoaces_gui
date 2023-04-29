@@ -21,7 +21,7 @@ brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces
 #Uninstall metis, openblas and suite-sparse, they cause issues with ceres-solver
 #brew uninstall metis openblas suite-sparse ceres-solver
 
-echo "Choose a path to build raw to aces and some dependencies. For example: /Users/username/git"
+echo "Choose a path to build raw to aces and some dependencies. For example: /Users/username/git/temp"
 read -p "Enter path to build directory: " build_path
 
 cd $build_path
@@ -44,36 +44,36 @@ mkdir _build && cd _build
 if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install ]; then
   echo Ceres-Solver already installed, will skip.
 else
-  echo Ceres Solver will now be complied and installed.
-  if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
-    echo git reposiotry already cloned, will check for updates.
-    cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
-    git pull
-  else
-    mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
-    git clone https://github.com/ceres-solver/ceres-solver.git src
-    cd src
-    #Change to version 1.14.0
-    git checkout 1.14.0
-  fi
-
-  #unlink ceres-solver from homebrew
-  brew unlink ceres-solver
-
-  mkdir build_ceres && cd build_ceres
-
-  cmake \
-  -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/ceres-solver/1.14.0 \
-  -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
-  ..
-
-  make -j 8
-
-  make install
-
-  #link ceres-solver to homebrew
-  brew link ceres-solver
+echo Ceres Solver will now be complied and installed.
+if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
+  git pull
+else
+  mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
+  git clone https://github.com/ceres-solver/ceres-solver.git src
+  cd src
+  #Change to version 1.14.0
+  git checkout 1.14.0
 fi
+
+#unlink ceres-solver from homebrew
+brew unlink ceres-solver
+
+mkdir build_ceres && cd build_ceres
+
+cmake \
+-DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/ceres-solver/1.14.0 \
+-DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
+..
+
+make -j 8
+
+make install
+
+#link ceres-solver to homebrew
+brew link ceres-solver
+
 
 cd $build_path/rawtoaces/_build
 
@@ -102,6 +102,7 @@ echo "export LD_LIBRARY_PATH=/opt/homebrew/lib" >> ~/.zprofile
 echo "export LD_INCLUDE_DIR=/opt/homebrew/include:/opt/homebrew/include/rawtoaces" >> ~/.zprofile
 echo "export AMPAS_DATA_PATH=/opt/homebrew/include/rawtoaces/data" >> ~/.zprofile
 
+cd $build_path/rawtoaces/_build
 
 #install rawtoaces_gui for macOS
 #Get rawtoaces_gui source

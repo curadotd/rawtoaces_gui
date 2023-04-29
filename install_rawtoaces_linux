@@ -1,0 +1,148 @@
+#!/bin/bash
+##Build and install raw to aces for Linux Redhat/Centos 9
+##https://github.com/AcademySoftwareFoundation/rawtoaces
+##Requires libraw to be installed => 0.21.0
+##Requires ceres-solver to be installed = 1.14.0
+
+##Linux install dependencies
+#enable powertools
+sudo dnf install dnf-plugins-core
+sudo dnf install epel-release
+
+sudo dnf update
+dnf config-manager --enable crb
+
+sudo dnf install cmake autoconf automake libtool pkg-config boost-devel \
+gcc glog-devel gflags-devel openexr-devel eigen3-devel g++ libjpeg-devel \
+libjasper-devel lcms2-devel suitesparse-devel metis-devel tbb-devel blas-devel lapack-devel openblas-serial     
+
+echo "Choose a path to build raw to aces and some dependencies. For example: /Users/username/git"
+read -p "Enter path to build directory: " build_path
+
+cd $build_path
+
+#Get rawtoaces source
+if [ -d $build_path/rawtoaces ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces
+  git pull
+else
+  git clone https://github.com/mjbacurado/rawtoaces.git
+  cd rawtoaces
+fi
+#create build directory
+mkdir _build && cd _build
+
+#Build extra dependencies
+
+#LibRaw build and install.
+echo LibRaw will now be complied and installed.
+if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_libraw/src ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces/raw_to_aces_deps_libraw/src
+  git pull
+else
+  mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
+  git clone https://github.com/LibRaw/LibRaw.git src
+  cd src
+fi
+
+autoreconf --install
+
+./configure
+
+make -j 4
+
+make install
+
+#Aces Container build and install.
+echo Aces Container will now be complied and installed.
+if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_aces_container/src ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces/raw_to_aces_deps_aces_container/src
+  git pull
+else
+  mkdir raw_to_aces_deps_aces_container && cd raw_to_aces_deps_aces_container
+  git clone https://github.com/miaoqi/aces_container.git src
+  cd src
+fi
+
+mkdir build && cd build
+
+cmake ..
+
+make -j 4
+
+sudo make install
+
+#link aces_container
+sudo ln -s /include/aces /usr/include
+
+#Ceres Solver build and install.
+echo Ceres Solver will now be complied and installed.
+if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
+  git pull
+else
+  mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
+  git clone https://github.com/ceres-solver/ceres-solver.git src
+  cd src
+  #Change to version 1.14.0
+  git checkout 1.14.0
+fi
+
+mkdir build_ceres && cd build_ceres
+
+cmake \
+-DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
+..
+
+make -j 8
+
+make install
+
+cd $build_path/rawtoaces/_build
+
+#Raw to Aces build and install.
+
+cmake \
+-DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
+-D_IlmBase_HINT_LIB=/usr/lib64 \
+-DIlmBase_INCLUDE_DIR=/usr/include/Imath \
+-D_libraw_HINT_LIB=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/lib \
+-D_libraw_HINT_INCLUDE=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/include/libraw \
+-DCERES_INCLUDE_DIRS=/usr/include/ceres \
+-DCERES_LIBRARY_DIRS=/usr/lib64 \
+-DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
+-DAcesContainer_LIBRARY_DIRS=/usr/lib \
+..
+
+make -j 4
+
+make install
+
+#set some needed environment variables
+echo "export PATH=/usr/local/bin:$PATH" >> ~/.bashrc
+echo "export LD_LIBRARY_PATH=/usr/local/lib" >> ~/.bashrc
+echo "export LD_INCLUDE_DIR=/usr/local/include/rawtoaces" >> ~/.bashrc
+echo "export AMPAS_DATA_PATH=/usr/local/rawtoaces/data" >> ~/.bashrc
+
+cd $build_path/rawtoaces/_build
+
+#install rawtoaces_gui for macOS
+#Get rawtoaces_gui source
+if [ -d rawtoaces_gui ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd rawtoaces_gui
+  git pull
+else
+  git clone https://github.com/mjbacurado/rawtoaces_gui.git
+  cd rawtoaces_gui
+fi
+
+#install python dependencies
+pip install pyside6
+
+cp -r python /usr/local/rawtoaces_gui
+cp -r bin /usr/local/bin
