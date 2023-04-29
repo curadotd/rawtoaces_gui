@@ -5,10 +5,9 @@
 @author Marco Curado
 @email mjbacurado@gmail.com
 """
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets, QtCore, QtGui
 
 import re
-
 
 # A regular expression, to extract the % complete.
 progress_re = re.compile("Total complete: (\d+)%")
@@ -73,6 +72,7 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         change_output_image_name_label = QtWidgets.QLabel("Change Output Image Name:")
         self.change_output_image_name = QtWidgets.QLineEdit()
         self.change_output_image_name.setFixedWidth(200)
+        self.change_output_image_name.setValidator(QtGui.QRegularExpressionValidator(QtCore.QRegularExpression("[a-zA-Z0-9_]+")))
 
         file_options.addWidget(sequence_label)
         file_options.addWidget(self.sequence)
