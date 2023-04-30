@@ -107,9 +107,12 @@ cd ..
 #install rawtoaces_gui for macOS
 
 #install python dependencies
+curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+python3 get-pip.py
+
 pip install pyside6
 
-mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
+mkdir -p /opt/homebrew/Cellar/rawtoaces_gui/master
 
 cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
 cp -r bin /opt/homebrew/Cellar/rawtoaces_gui/master
