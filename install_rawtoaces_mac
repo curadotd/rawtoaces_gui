@@ -18,9 +18,6 @@ fi
 
 brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw gflags
 
-#Uninstall metis, openblas and suite-sparse, they cause issues with ceres-solver
-#brew uninstall metis openblas suite-sparse ceres-solver
-
 echo "Choose a path to build raw to aces and some dependencies. For example: /Users/username/git/temp"
 read -p "Enter path to build directory: " build_path
 
