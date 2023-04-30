@@ -384,4 +384,4 @@ class RawtoAcesGui(QtWidgets.QMainWindow):
         """
         self.message("Process finished.")
         self.p = None
-        self.progress_window.close()
+        #self.progress_window.close()

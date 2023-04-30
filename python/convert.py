@@ -23,34 +23,41 @@ for args in sys.argv:
 
 #Here we extract the new name of the image
 if "--change-output-image-name" in commands:
-    new_name = commands.pop()
+    get_new_name = commands.pop()
 
 def flush_then_wait():
     """function to flush the stdout and stderr and wait 0.5 seconds
     """
     sys.stdout.flush()
     sys.stderr.flush()
-    time.sleep(0.5)
+    time.sleep(0.1)
 
 def changeImageName(commands):
     """function to change the name of the image
     We also add a number padding .####. to the end of the name to avoid overwriting the images.
     """
+    #Here we create a count variable to add to the end of the name
     count = 1001
+    
+    #Here we check if the user wants to convert a sequence of images
+    if "--sequence" in commands:
+        sequence = True
     #Here we remove the arguments that we don't need, and get the path of the image.
+
     commands = [x for x in commands if "--sequence" not in x and "--create-exr-subfolder" not in x and "--change-output-image-name" not in x and convert_key not in x]
     full_path = commands.pop()
     path = os.path.dirname(full_path)
 
     #Here we get all the images in the folder and sort them
-    images = [f for f in os.listdir(path) if '.exr' in f.lower()]
+    images = [f for f in os.listdir(path) if '.exr' in f and not f.startswith('.')]
     images.sort()
 
     #Here we rename the images
     for image in images:
-        new_name = "stars." + str(count) + ".exr"
+        new_name = "{0}.".format(get_new_name) + str(count) + ".exr"
+        print("new image name:", new_name)
         count += 1
-        sys.stdout.write("star_moving: {0} to {1}\n".format(os.path.join(path, image), os.path.join(path, new_name)))
+        sys.stdout.write("start_moving: {0} to {1}\n".format(os.path.join(path, image), os.path.join(path, new_name)))
         os.rename(os.path.join(path, image), os.path.join(path, new_name))
         sys.stdout.write("end_moving: Finished\n")
         sys.stderr.write("Total complete: 90%\n")
