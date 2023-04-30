@@ -41,17 +41,17 @@ mkdir _build && cd _build
 if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install ]; then
   echo Ceres-Solver already installed, will skip.
 else
-echo Ceres Solver will now be complied and installed.
-if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
-  echo git reposiotry already cloned, will check for updates.
-  cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
-  git pull
-else
-  mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
-  git clone https://github.com/ceres-solver/ceres-solver.git src
-  cd src
-  #Change to version 1.14.0
-  git checkout 1.14.0
+  echo Ceres Solver will now be complied and installed.
+  if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
+    echo git reposiotry already cloned, will check for updates.
+    cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
+    git pull
+  else
+    mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
+    git clone https://github.com/ceres-solver/ceres-solver.git src
+    cd src
+    #Change to version 1.14.0
+    git checkout 1.14.0
 fi
 
 #unlink ceres-solver from homebrew
