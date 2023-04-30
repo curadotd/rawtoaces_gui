@@ -1,5 +1,7 @@
 # RAW to ACES GUI
 
+<img src="/images/rawtoaces_gui.jpg" alt="Alt text" title="RawtoAces GUI">
+
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Package Contents](#package-contents)
