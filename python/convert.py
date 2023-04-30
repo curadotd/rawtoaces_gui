@@ -6,6 +6,7 @@
 @email mjbacurado@gmail.com
 """
 
+import multiprocessing
 import os
 import sys
 import subprocess
@@ -55,7 +56,6 @@ def changeImageName(commands):
     #Here we rename the images
     for image in images:
         new_name = "{0}.".format(get_new_name) + str(count) + ".exr"
-        print("new image name:", new_name)
         count += 1
         sys.stdout.write("start_moving: {0} to {1}\n".format(os.path.join(path, image), os.path.join(path, new_name)))
         os.rename(os.path.join(path, image), os.path.join(path, new_name))
@@ -85,7 +85,6 @@ def convertComand(commands, sequence=False, percent=False):
     sys.stdout.write( "exit status: {0}\n".format(process.returncode))
     sys.stdout.write( "stdout: {0}\n".format(process.stdout.decode()))
     sys.stderr.write("Total complete: {0}%\n".format(int(percent)))
-    flush_then_wait()
 
 def createSubFolder(commands):
     """function to create a exr subfolder
