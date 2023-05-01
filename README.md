@@ -253,7 +253,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     -D_libraw_HINT_LIB=/usr/local/lib64 \
     -D_libraw_HINT_INCLUDE=/usr/local/include/libraw \
     -DCERES_INCLUDE_DIRS=/usr/local/include/ceres \
-    -DCERES_LIBRARY_DIRS=/usr/loacal/lib64 \
+    -DCERES_LIBRARY_DIRS=/usr/local/lib64 \
     -DAcesContainer_INCLUDE_DIRS=/usr/local/include/aces/ \
     -DAcesContainer_LIBRARY_DIRS=/usr/local/lib \
     ..
