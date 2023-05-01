@@ -152,7 +152,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     sudo dnf update
     ```
     ```sh
-    dnf config-manager --enable crb
+    sudo dnf config-manager --enable crb
     ```
     ```sh
     sudo dnf install cmake autoconf automake libtool pkg-config boost-devel \
@@ -187,7 +187,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     make -j 4
     ```
     ```sh
-    make install
+    sudo make install
     ```
     ```sh
     mkdir raw_to_aces_deps_aces_container && cd raw_to_aces_deps_aces_container
@@ -246,10 +246,10 @@ https://github.com/mjbacurado/rawtoaces#installation
     -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
     -D_IlmBase_HINT_LIB=/usr/lib64 \
     -DIlmBase_INCLUDE_DIR=/usr/include/Imath \
-    -D_libraw_HINT_LIB=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/lib \
-    -D_libraw_HINT_INCLUDE=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/include/libraw \
-    -DCERES_INCLUDE_DIRS=/usr/include/ceres \
-    -DCERES_LIBRARY_DIRS=/usr/lib64 \
+    -D_libraw_HINT_LIB=/usr/local/lib \
+    -D_libraw_HINT_INCLUDE=/usr/local/include/libraw \
+    -DCERES_INCLUDE_DIRS=/usr/local/include/ceres \
+    -DCERES_LIBRARY_DIRS=/usr/loacal/lib64 \
     -DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
     -DAcesContainer_LIBRARY_DIRS=/usr/lib \
     ..
@@ -263,9 +263,9 @@ https://github.com/mjbacurado/rawtoaces#installation
 
     #set some needed environment variables
     ```sh
-    echo "export LD_LIBRARY_PATH=/usr/local/lib" >> ~/.zprofile
-    echo "export LD_INCLUDE_DIR=/usr/local/include/rawtoaces" >> ~/.zprofile
-    echo "export AMPAS_DATA_PATH=/usr/local/rawtoaces/data" >> ~/.zprofile
+    echo "export LD_LIBRARY_PATH=/usr/local/lib" >> ~/.bashrc
+    echo "export LD_INCLUDE_DIR=/usr/local/include/rawtoaces" >> ~/.bashrc
+    echo "export AMPAS_DATA_PATH=/usr/local/rawtoaces/data" >> ~/.bashrc
     ```
 
     cd $build_path/rawtoaces/_build
@@ -286,7 +286,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     ```sh
     cp -r python /usr/local/rawtoaces_gui
     ```
-    ```sh
+    ```
     cp -r bin /usr/local/bin
     ```sh
 
