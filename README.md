@@ -169,27 +169,6 @@ https://github.com/mjbacurado/rawtoaces#installation
     mkdir _build && cd _build
     ```
     ```sh
-    mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
-    ```
-    ```sh
-    git clone https://github.com/LibRaw/LibRaw.git src
-    ```
-    ```sh
-    cd src
-    ```
-    ```sh
-    autoreconf --install
-    ```
-    ```sh
-    ./configure
-    ```
-    ```sh
-    make -j 4
-    ```
-    ```sh
-    sudo make install
-    ```
-    ```sh
     mkdir raw_to_aces_deps_aces_container && cd raw_to_aces_deps_aces_container
     ```
     ```sh
@@ -203,6 +182,27 @@ https://github.com/mjbacurado/rawtoaces#installation
     ```
     ```sh
     cmake ..
+    ```
+    ```sh
+    make -j 4
+    ```
+    ```sh
+    sudo make install
+    ```
+    ```sh
+    mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
+    ```
+    ```sh
+    git clone https://github.com/LibRaw/LibRaw.git src
+    ```
+    ```sh
+    cd src
+    ```
+    ```sh
+    autoreconf --install
+    ```
+    ```sh
+    ./configure
     ```
     ```sh
     make -j 4
@@ -250,8 +250,8 @@ https://github.com/mjbacurado/rawtoaces#installation
     -D_libraw_HINT_INCLUDE=/usr/local/include/libraw \
     -DCERES_INCLUDE_DIRS=/usr/local/include/ceres \
     -DCERES_LIBRARY_DIRS=/usr/loacal/lib64 \
-    -DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
-    -DAcesContainer_LIBRARY_DIRS=/usr/lib \
+    -DAcesContainer_INCLUDE_DIRS=/usr/local/include/aces/ \
+    -DAcesContainer_LIBRARY_DIRS=/usr/local/lib \
     ..
     ```
     ```sh
