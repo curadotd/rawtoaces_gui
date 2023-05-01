@@ -157,7 +157,8 @@ https://github.com/mjbacurado/rawtoaces#installation
     ```sh
     sudo dnf install cmake autoconf automake libtool pkg-config boost-devel \
     gcc glog-devel gflags-devel openexr-devel eigen3-devel g++ libjpeg-devel \
-    libjasper-devel lcms2-devel suitesparse-devel metis-devel tbb-devel blas-devel lapack-devel openblas-serial
+    libjasper-devel lcms2-devel suitesparse-devel metis-devel tbb-devel blas-devel \
+    lapack-devel openblas-serial dcraw
     ```
     ```sh
     git clone https://github.com/mjbacurado/rawtoaces.git
@@ -193,16 +194,19 @@ https://github.com/mjbacurado/rawtoaces#installation
     mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
     ```
     ```sh
-    git clone https://github.com/LibRaw/LibRaw.git src
+    git clone https://github.com/LibRaw/LibRaw-cmake.git src
     ```
     ```sh
     cd src
     ```
     ```sh
-    autoreconf --install
+    git clone https://github.com/LibRaw/LibRaw.git libraw
     ```
     ```sh
-    ./configure
+   cd LibRaw-cmake && mkdir build && cd build
+    ```
+    ```sh
+    cmake -DLIBRAW_PATH=/home/mcurado/git/rawtoaces/_build/raw_to_aces_deps_libraw/src/libraw -DENABLE_DCRAW_DEBUG=ON ..
     ```
     ```sh
     make -j 4
