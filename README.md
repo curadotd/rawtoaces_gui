@@ -250,7 +250,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
     -D_IlmBase_HINT_LIB=/usr/lib64 \
     -DIlmBase_INCLUDE_DIR=/usr/include/Imath \
-    -D_libraw_HINT_LIB=/usr/local/lib \
+    -D_libraw_HINT_LIB=/usr/local/lib64 \
     -D_libraw_HINT_INCLUDE=/usr/local/include/libraw \
     -DCERES_INCLUDE_DIRS=/usr/local/include/ceres \
     -DCERES_LIBRARY_DIRS=/usr/loacal/lib64 \
