@@ -53,44 +53,44 @@ https://github.com/mjbacurado/rawtoaces#installation
 	Install dependencies
 	
 	```sh
-	$ brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw ceres-solver
+	brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw ceres-solver
 	```
     ```sh
-    $ git clone https://github.com/ceres-solver/ceres-solver.git
+    git clone https://github.com/ceres-solver/ceres-solver.git
     ```
     #Change to version 1.14.0
     ```sh
-    $ git checkout 1.14.0
+    git checkout 1.14.0
     ```
     #unlink ceres-solver from homebrew
     ```sh
-    $ brew unlink ceres-solver
+    brew unlink ceres-solver
     ```
     ```sh
-    $ mkdir build_ceres && cd build_ceres
+    mkdir build_ceres && cd build_ceres
     ```
     ```sh
-    $ cmake \
+    cmake \
     -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/ceres-solver/1.14.0 \
     -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
     ..
     ```
     ```sh
-    $ make -j 8
+    make -j 8
     ```
     ```sh
-    $ make install
+    make install
     ```
     #link ceres-solver to homebrew
     ```sh
-    $ brew link ceres-solver
+    brew link ceres-solver
     ```
     #Raw to Aces build and install.
     ```sh
-    $ git clone https://github.com/mjbacurado/rawtoaces.git
+    git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
     ``` 
     ```sh
-    $ cmake \
+    cmake \
     -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/opt/homebrew/Cellar/gcc/12.2.0/bin/gcc-12 \
     -D_IlmBase_HINT_LIB=/opt/homebrew/opt/ilmbase/lib \
     -D_IlmBase_HINT_INCLUDE=/opt/homebrew/opt/ilmbase/include \
@@ -101,41 +101,41 @@ https://github.com/mjbacurado/rawtoaces#installation
     -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/rawtoaces/master ..
     ```
     ```sh
-   $  make
+    make
     ```
     ```sh
-    $ make install
+    make install
     ```
     #link rawtoaces to homebrew
     ```sh
-    $ brew link rawtoaces
+    brew link rawtoaces
     ```
     #set some needed environment variables
     ```sh
-    $ echo "export LD_LIBRARY_PATH=/opt/homebrew/lib" >> ~/.zprofile
+    echo "export LD_LIBRARY_PATH=/opt/homebrew/lib" >> ~/.zprofile
     ```
     ```sh
-    $ echo "export LD_INCLUDE_DIR=/opt/homebrew/include:/opt/homebrew/include/rawtoaces" >> ~/.zprofile
+    echo "export LD_INCLUDE_DIR=/opt/homebrew/include:/opt/homebrew/include/rawtoaces" >> ~/.zprofile
     ```
     ```sh
-    $ echo "export AMPAS_DATA_PATH=/opt/homebrew/include/rawtoaces/data" >> ~/.zprofile
+    echo "export AMPAS_DATA_PATH=/opt/homebrew/include/rawtoaces/data" >> ~/.zprofile
     ```
     #install rawto aces gui
     #install python dependencies
     ```sh
-    $ pip install pyside6
+    pip install pyside6
     ```
     ```sh
-    $ mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
+    mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
     ```
     ```sh
-    $ cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
+    cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
     ```
     ```sh
-    $ cp -r bin /opt/homebrew/Cellar/rawtoaces_gui/master
+    cp -r bin /opt/homebrew/Cellar/rawtoaces_gui/master
     ```
     ```sh
-    $ brew link rawtoaces_gui
+    brew link rawtoaces_gui
     ```
 
 
@@ -161,7 +161,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     lapack-devel openblas-serial dcraw
     ```
     ```sh
-    git clone https://github.com/mjbacurado/rawtoaces.git
+    git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
     ```
     ```sh
     cd rawtoaces
