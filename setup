@@ -48,9 +48,33 @@ else
     exit 1
 fi
 
-echo "Choose a path to build raw to aces and some dependencies. For example: $HOME/$USER/git"
-read -p "Enter path to build directory: " build_path
+get_git_path() {
+    # Check if GIT_PATH is already set
+    if [ -z "$GIT_PATH" ]; then
+        read -p "Do you want to create a default location for git repositories? (y/n) " create_git_dir
+        if [[ $create_git_dir =~ ^[Yy]$ ]]; then
+            read -p "Enter the path for git repositories (default: $HOME/git): " git_path
+            GIT_PATH=$git_path
+            export GIT_PATH
+            
+            if [ ! -d "$GIT_PATH" ]; then
+                mkdir -p "$GIT_PATH"
+                echo "Created git directory at $GIT_PATH"
+            else
+                echo "Git directory already exists at $GIT_PATH"
+            fi
+        else
+            echo "Skipping git directory creation."
+        fi
+    else
+        echo "GIT_PATH is already set to $GIT_PATH"
+    fi
+}
 
+get_git_path
+
+build_path=$GIT_PATH
+export build_path
 cd $build_path
 
 #Get rawtoaces source
