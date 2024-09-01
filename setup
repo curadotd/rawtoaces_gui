@@ -14,7 +14,7 @@ if command -v pacman &> /dev/null; then
     # Check for yay and install metis if not present
     if command -v yay &> /dev/null; then
         # Install metis using yay
-        yay -S metis openblas-lapack
+        yay -S --needed metis openblas-lapack
     else
         read -p "yay is not installed. Do you want to install yay and then metis? (y/n): " install_yay
         if [ "$install_yay" == "y" ]; then
@@ -241,7 +241,7 @@ if [ ! -d "$install_path" ]; then
 fi
 
 # Replace the existing RAW_TO_ACES_GUI_INSTALL_PATH value
-sed -i "s|export RAW_TO_ACES_GUI_INSTALL_PATH=\".*\"|export RAW_TO_ACES_GUI_INSTALL_PATH=\"$install_path\"|" "bin/rawtoaces_gui"
+sed -i "s|export RAW_TO_ACES_GUI_INSTALL_PATH=\".*\"|export RAW_TO_ACES_GUI_INSTALL_PATH=\"$install_path/python\"|" "bin/rawtoaces_gui"
 
 # Ask user for the bin folder installation path
 read -p "Enter path to install rawtoaces_gui from bin (recommended: /usr/bin): " bin_path
