@@ -41,258 +41,214 @@ pip install PySide6
 ###### Raw to Aces 
 https://github.com/mjbacurado/rawtoaces#installation
 
-* macOS
-	
-	Install homebrew if not already installed
-	
-	```sh
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	```
-    Remember to add the paths to your .zprofile as instructed an the end of the installation.
-	
-	Install dependencies
-	
-	```sh
-	brew install cmake ilmBase autoconf automake libtool pkg-config boost eigen aces_container gcc glog libraw ceres-solver
-	```
+* Linux
+    Using the setup script.
     ```sh
-    git clone https://github.com/ceres-solver/ceres-solver.git
-    ```
-    #Change to version 1.14.0
-    ```sh
-    git checkout 1.14.0
-    ```
-    #unlink ceres-solver from homebrew
-    ```sh
-    brew unlink ceres-solver
-    ```
-    ```sh
-    mkdir build_ceres && cd build_ceres
-    ```
-    ```sh
-    cmake \
-    -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/ceres-solver/1.14.0 \
-    -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
-    ..
-    ```
-    ```sh
-    make -j 8
-    ```
-    ```sh
-    make install
-    ```
-    #link ceres-solver to homebrew
-    ```sh
-    brew link ceres-solver
-    ```
-    #Raw to Aces build and install.
-    ```sh
-    git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
-    ``` 
-    ```sh
-    cmake \
-    -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/opt/homebrew/Cellar/gcc/12.2.0/bin/gcc-12 \
-    -D_IlmBase_HINT_LIB=/opt/homebrew/opt/ilmbase/lib \
-    -D_IlmBase_HINT_INCLUDE=/opt/homebrew/opt/ilmbase/include \
-    -D_libraw_HINT_LIB=/opt/homebrew/opt/libraw/install/lib \
-    -D_libraw_HINT_INCLUDE=/opt/homebrew/opt/libraw/install/include \
-    -DCERES_INCLUDE_DIRS=/opt/homebrew/opt/ceres-solver/include \
-    -DCERES_LIBRARY_DIRS=/opt/homebrew/opt/ceres-solver/lib \
-    -DCMAKE_INSTALL_PREFIX=/opt/homebrew/Cellar/rawtoaces/master ..
-    ```
-    ```sh
-    make
-    ```
-    ```sh
-    make install
-    ```
-    #link rawtoaces to homebrew
-    ```sh
-    brew link rawtoaces
-    ```
-    #set some needed environment variables
-    ```sh
-    echo "export LD_LIBRARY_PATH=/opt/homebrew/lib" >> ~/.zprofile
-    ```
-    ```sh
-    echo "export LD_INCLUDE_DIR=/opt/homebrew/include:/opt/homebrew/include/rawtoaces" >> ~/.zprofile
-    ```
-    ```sh
-    echo "export AMPAS_DATA_PATH=/opt/homebrew/include/rawtoaces/data" >> ~/.zprofile
-    ```
-    #install rawto aces gui
-    #install python dependencies
-    ```sh
-    pip install pyside6
-    ```
-    ```sh
-    mkdir /opt/homebrew/Cellar/rawtoaces_gui/master
-    ```
-    ```sh
-    cp -r python /opt/homebrew/Cellar/rawtoaces_gui/master
-    ```
-    ```sh
-    cp -r bin /opt/homebrew/Cellar/rawtoaces_gui/master
-    ```
-    ```sh
-    brew link rawtoaces_gui
+    git clone https://github.com/curadotd/rawtoaces_gui.git
+    cd rawtoaces_gui
+    ./setup
     ```
 
+    Manually.
 
-* RockyLinux
-	
-    #enable powertools
+    Firstly install some needed dependencies.
+
+    Arch
+    ```sh
+    sudo pacman -S --needed cmake autoconf automake libtool pkg-config boost gcc google-glog gflags openexr \
+    eigen libjpeg-turbo jasper lcms2 suitesparse tbb blas-openblas pyside6 pyside6-tools
+
+    yay -S --needed metis openblas-lapack
+    ```
+    Rocky Linux
     ```sh
     sudo dnf install dnf-plugins-core
-    ```
-    ```sh
     sudo dnf install epel-release
-    ```
-    ```sh
     sudo dnf update
+    dnf config-manager --enable crb
+    sudo dnf install cmake autoconf automake libtool pkg-config boost-devel gcc glog-devel gflags-devel \
+    openexr-devel eigen3-devel g++ libjpeg-devel libjasper-devel lcms2-devel suitesparse-devel metis-devel \
+    tbb-devel blas-devel lapack-devel openblas-serial
     ```
+
+    Debian Linux
     ```sh
-    sudo dnf config-manager --enable crb
+    sudo apt update
+    sudo apt install cmake autoconf automake libtool pkg-config libboost-dev gcc libgoogle-glog-dev \
+    libgflags-dev libopenexr-dev libeigen3-dev g++ libjpeg-dev libjasper-dev liblcms2-dev libsuitesparse-dev \
+    libmetis-dev libtbb-dev libblas-dev liblapack-dev libopenblas-dev
     ```
-    ```sh
-    sudo dnf install cmake autoconf automake libtool pkg-config boost-devel \
-    gcc glog-devel gflags-devel openexr-devel eigen3-devel g++ libjpeg-devel \
-    libjasper-devel lcms2-devel suitesparse-devel metis-devel tbb-devel blas-devel \
-    lapack-devel openblas-serial dcraw
-    ```
+
+    Get rawtoaces source, Rocky, Debian and Arch.
+    
     ```sh
     git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
-    ```
-    ```sh
     cd rawtoaces
     ```
+    Create build directory.
     ```sh
     mkdir _build && cd _build
     ```
+    
+    Build extra dependencies
+
+    Aces Container build and install, Rocky, Debian and Arch.
+
     ```sh
     mkdir raw_to_aces_deps_aces_container && cd raw_to_aces_deps_aces_container
-    ```
-    ```sh
     git clone https://github.com/miaoqi/aces_container.git src
-    ```
-    ```sh
     cd src
-    ```
-    ```sh
+
     mkdir build && cd build
-    ```
-    ```sh
-    cmake ..
-    ```
-    ```sh
+
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+
     make -j 4
-    ```
-    ```sh
+
     sudo make install
     ```
+
+    LibRaw install Arch and Debian, for Rocky build it.
+
+    Arch
+    ```sh
+    sudo pacman -S --needed libraw
+    ```
+    Debian
+    ```sh
+    sudo apt-get install libraw-dev
+    ```
+
+    Rocky
     ```sh
     mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
-    ```
-    ```sh
-    git clone https://github.com/LibRaw/LibRaw-cmake.git src
-    ```
-    ```sh
+    git clone https://github.com/LibRaw/LibRaw.git src
     cd src
-    ```
-    ```sh
-    git clone https://github.com/LibRaw/LibRaw.git libraw
-    ```
-    ```sh
-   cd LibRaw-cmake && mkdir build && cd build
-    ```
-    ```sh
-    cmake -DLIBRAW_PATH=/home/mcurado/git/rawtoaces/_build/raw_to_aces_deps_libraw/src/libraw -DENABLE_DCRAW_DEBUG=ON ..
-    ```
-    ```sh
+
+    autoreconf --install
+
+    ./configure
+
     make -j 4
+
+    make install
     ```
+
+    #Ceres Solver install Arch and Debian, for Rocky build it.
+
+    Arch
     ```sh
-    sudo make install
+    sudo pacman -S --needed ceres-solver
     ```
+
+    Debian
+    ```sh
+    sudo apt-get install  libceres-dev
+    ```
+
+    Rocky
     ```sh
     mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
-    ```
-    ```sh
     git clone https://github.com/ceres-solver/ceres-solver.git src
-    ```
-    ```sh
     cd src
-    ```
-    #Change to version 1.14.0
-    ```sh
-    git checkout 1.14.0
-    ```
-    ```sh
+    #Change to version 2.1.0
+    git checkout 2.1.0
+
     mkdir build_ceres && cd build_ceres
-    ```
-    ```sh
+
     cmake \
     -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
     ..
-    ```
-    ```sh
+
     make -j 8
-    ```
-    ```sh
+
     make install
     ```
+
+    RawToAces build and install, Rocky, Debian and Arch.
+
     ```sh
     cd $build_path/rawtoaces/_build
     ```
-    #Raw to Aces build and install.
+
+    Raw to Aces build and install.
+
+    Arch and Debian.
     ```sh
-    cmake \
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib ..
+    make -j 4
+    make test
+    sudo make install
+    ```
+
+    Rocky
+    ```sh
+    cmake -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
     -D_IlmBase_HINT_LIB=/usr/lib64 \
     -DIlmBase_INCLUDE_DIR=/usr/include/Imath \
-    -D_libraw_HINT_LIB=/usr/local/lib64 \
-    -D_libraw_HINT_INCLUDE=/usr/local/include/libraw \
-    -DCERES_INCLUDE_DIRS=/usr/local/include/ceres \
-    -DCERES_LIBRARY_DIRS=/usr/local/lib64 \
-    -DAcesContainer_INCLUDE_DIRS=/usr/local/include/aces/ \
-    -DAcesContainer_LIBRARY_DIRS=/usr/local/lib \
+    -D_libraw_HINT_LIB=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/lib \
+    -D_libraw_HINT_INCLUDE=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/include/libraw \
+    -DCERES_INCLUDE_DIRS=/usr/include/ceres \
+    -DCERES_LIBRARY_DIRS=/usr/lib64 \
+    -DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
+    -DAcesContainer_LIBRARY_DIRS=/usr/lib \
     ..
-    ```
-    ```sh
+
     make -j 4
-    ```
-    ```sh
-    suod make install
+  
+    make test
+
+    make install
     ```
 
-    #set some needed environment variables
     ```sh
-    echo "export LD_LIBRARY_PATH=/usr/local/lib" >> ~/.bashrc
-    echo "export LD_INCLUDE_DIR=/usr/local/include/rawtoaces" >> ~/.bashrc
-    echo "export AMPAS_DATA_PATH=/usr/local/rawtoaces/data" >> ~/.bashrc
-    ```
-
     cd $build_path/rawtoaces/_build
+    ```
 
-    #install rawtoaces_gui for macOS
-    #Get rawtoaces_gui source
+    install rawtoaces_gui for Arch, Debian and Rocky linux.
+    
+    Get rawtoaces_gui source
     ```sh
     git clone https://github.com/mjbacurado/rawtoaces_gui.git
-    ```
-    ```sh
     cd rawtoaces_gui
     ```
 
-    #install python dependencies
+    install python dependencies
+    
+    Rocky
     ```sh
     pip install pyside6
     ```
+    
+    Debian
     ```sh
-    cp -r python /usr/local/rawtoaces_gui
+    pip3 install pyside6
     ```
-    ```
-    cp -r bin /usr/local/bin
+
+    Istallation rawtoaces_gui recommended path: $HOME/Software/curadotd_tools/rawtoaces_gui
+    If your Path needs sudo, and that before the commands bellow.
     ```sh
+    mkdir -p "$HOME/Software/curadotd_tools/rawtoaces_gui"
+    cp -R python "$HOME/Software/curadotd_tools/rawtoaces_gui"
+    ```
+
+    Replace the existing RAW_TO_ACES_GUI_INSTALL_PATH value
+    ```sh
+    sed -i "s|export RAW_TO_ACES_GUI_INSTALL_PATH=\".*\"|export RAW_TO_ACES_GUI_INSTALL_PATH=\"$HOME/Software/curadotd_tools/rawtoaces_gui\"|" "bin/rawtoaces_gui"
+    ```
+
+    Copy the bin "rawtoaces_gui" file to the folder of choice, recommended: /usr/bin
+
+    ```sh
+    sudo cp bin/rawtoaces_gui "/usr/bin"
+    ```
+
+    If you have added it to a custom folder, you might want to add it to you $PATH
+
+    ```sh
+    echo "export PATH=\$PATH:$bin_path" >> ~/.bashrc
+    ```
 
 ## Usage
 

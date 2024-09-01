@@ -1,0 +1,245 @@
+#!/bin/bash
+##Build and install raw to aces for Linux Redhat/Centos 9
+##https://github.com/AcademySoftwareFoundation/rawtoaces
+##Requires libraw to be installed => 0.21.0
+##Requires ceres-solver to be installed = 1.14.0
+
+##Linux install dependencies
+# Check for the package manager and install dependencies accordingly
+if command -v pacman &> /dev/null; then
+    # Arch Linux
+    sudo pacman -Syy
+    sudo pacman -S --needed cmake autoconf automake libtool pkg-config boost gcc google-glog gflags openexr \
+    eigen libjpeg-turbo jasper lcms2 suitesparse tbb blas-openblas pyside6 pyside6-tools
+    # Check for yay and install metis if not present
+    if command -v yay &> /dev/null; then
+        # Install metis using yay
+        yay -S metis openblas-lapack
+    else
+        read -p "yay is not installed. Do you want to install yay and then metis? (y/n): " install_yay
+        if [ "$install_yay" == "y" ]; then
+            # Install yay (assuming base-devel is already installed)
+            sudo pacman -S --needed git base-devel
+            git clone https://aur.archlinux.org/yay.git
+            cd yay
+            makepkg -si --noconfirm
+            cd ..
+            rm -rf yay
+            yay -S --needed metis openblas-lapack
+        fi
+fi
+elif command -v dnf &> /dev/null; then
+    # Rocky Linux
+    sudo dnf install dnf-plugins-core
+    sudo dnf install epel-release
+    sudo dnf update
+    dnf config-manager --enable crb
+    sudo dnf install cmake autoconf automake libtool pkg-config boost-devel gcc glog-devel gflags-devel \
+    openexr-devel eigen3-devel g++ libjpeg-devel libjasper-devel lcms2-devel suitesparse-devel metis-devel \
+    tbb-devel blas-devel lapack-devel openblas-serial ilmbase-devel python-pip
+elif command -v apt &> /dev/null; then
+    # Debian Linux
+    sudo apt update
+    sudo apt install cmake autoconf automake libtool pkg-config libboost-dev gcc libgoogle-glog-dev \
+    libgflags-dev libopenexr-dev libeigen3-dev g++ libjpeg-dev libjasper-dev liblcms2-dev libsuitesparse-dev \
+    libmetis-dev libtbb-dev libblas-dev liblapack-dev libopenblas-dev libilmbase-dev python3 python3-pip
+else
+    echo "Unsupported package manager. Please install dependencies manually."
+    exit 1
+fi
+
+echo "Choose a path to build raw to aces and some dependencies. For example: $HOME/$USER/git"
+read -p "Enter path to build directory: " build_path
+
+cd $build_path
+
+#Get rawtoaces source
+if [ -d $build_path/rawtoaces ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces
+  git pull
+else
+  git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
+  cd rawtoaces
+fi
+#create build directory
+mkdir _build && cd _build
+
+#Build extra dependencies
+
+#Aces Container build and install.
+echo Aces Container will now be complied and installed.
+if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_aces_container/src ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd $build_path/rawtoaces/raw_to_aces_deps_aces_container/src
+  git pull
+else
+  mkdir raw_to_aces_deps_aces_container && cd raw_to_aces_deps_aces_container
+  git clone https://github.com/miaoqi/aces_container.git src
+  cd src
+fi
+
+mkdir build && cd build
+
+cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+
+make -j 4
+
+sudo make install
+
+#LibRaw build and install.
+if command -v pacman &> /dev/null; then
+  echo LibRaw will now be installed.
+  sudo pacman -S --needed libraw
+elif command -v apt &> /dev/null; then
+  echo LibRaw will now be installed.
+  sudo apt-get install libraw-dev
+elif command -v dnf &> /dev/null; then
+  echo LibRaw will now be complied and installed.
+  if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_libraw/src ]; then
+    echo git reposiotry already cloned, will check for updates.
+    cd $build_path/rawtoaces/raw_to_aces_deps_libraw/src
+    git pull
+  else
+    mkdir raw_to_aces_deps_libraw && cd raw_to_aces_deps_libraw
+    git clone https://github.com/LibRaw/LibRaw.git src
+    cd src
+  fi
+
+  autoreconf --install
+
+  ./configure
+
+  make -j 4
+
+  make install
+fi
+
+#Ceres Solver build and install.
+if command -v pacman &> /dev/null; then
+  echo Ceres Solver will now be installed.
+  sudo pacman -S --needed ceres-solver
+elif command -v apt &> /dev/null; then
+  echo Ceres Solver will now be installed.
+  sudo apt-get install  libceres-dev
+elif command -v dnf &> /dev/null; then
+  echo Ceres Solver will now be complied and installed.
+  if [ -d $build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/src ]; then
+    echo git reposiotry already cloned, will check for updates.
+    cd $build_path/rawtoaces/raw_to_aces_deps_ceres_solver/src
+    git pull
+  else
+    mkdir raw_to_aces_deps_ceres_solver && cd raw_to_aces_deps_ceres_solver
+    git clone https://github.com/ceres-solver/ceres-solver.git src
+    cd src
+    #Change to version 2.1.0
+    git checkout 2.1.0
+  fi
+
+  mkdir build_ceres && cd build_ceres
+
+  cmake \
+  -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
+  ..
+
+  make -j 8
+
+  make install
+fi
+
+cd $build_path/rawtoaces/_build
+
+#Raw to Aces build and install.
+if command -v pacman &> /dev/null; then
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib ..
+  make -j 4
+  make test
+  sudo make install
+elif command -v apt &> /dev/null; then
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib ..
+  make -j 4
+  make test
+  sudo make install
+elif command -v dnf &> /dev/null; then
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+  -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
+  -D_IlmBase_HINT_LIB=/usr/lib64 \
+  -DIlmBase_INCLUDE_DIR=/usr/include/Imath \
+  -D_libraw_HINT_LIB=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/lib \
+  -D_libraw_HINT_INCLUDE=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/include/libraw \
+  -DCERES_INCLUDE_DIRS=/usr/include/ceres \
+  -DCERES_LIBRARY_DIRS=/usr/lib64 \
+  -DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
+  -DAcesContainer_LIBRARY_DIRS=/usr/lib \
+  ..
+
+  make -j 4
+  
+  make test
+
+  make install
+fi
+
+cd $build_path/rawtoaces/_build
+
+#install rawtoaces_gui for macOS
+#Get rawtoaces_gui source
+if [ -d rawtoaces_gui ]; then
+  echo git reposiotry already cloned, will check for updates.
+  cd rawtoaces_gui
+  git pull
+else
+  git clone https://github.com/mjbacurado/rawtoaces_gui.git
+  cd rawtoaces_gui
+fi
+
+#install python dependencies
+if command -v dnf &> /dev/null; then
+    pip install pyside6
+elif command -v apt &> /dev/null; then
+    pip3 install pyside6
+fi
+
+# Ask user for installation path for rawtoaces_gui
+read -p "Enter installation path for rawtoaces_gui (recommended: $HOME/Software/curadotd_tools/rawtoaces_gui): " install_path
+
+# Check if the install_path needs sudo privileges
+if [ ! -d "$install_path" ]; then
+    echo "$install_path does not exist. You may need sudo privileges to create it."
+    read -p "Do you need sudo privileges for install_path? (y/n): " use_sudo_install
+    if [ "$use_sudo_install" == "y" ]; then
+        sudo mkdir -p "$install_path"
+        sudo cp -R python "$install_path"
+    else
+        mkdir -p "$install_path"
+        cp -R python "$install_path"
+    fi
+fi
+
+# Replace the existing RAW_TO_ACES_GUI_INSTALL_PATH value
+sed -i "s|export RAW_TO_ACES_GUI_INSTALL_PATH=\".*\"|export RAW_TO_ACES_GUI_INSTALL_PATH=\"$install_path\"|" "bin/rawtoaces_gui"
+
+# Ask user for the bin folder installation path
+read -p "Enter path to install rawtoaces_gui from bin (recommended: /usr/bin): " bin_path
+
+# Check if the bin_path exists and if sudo privileges are needed
+if [ ! -d "$bin_path" ]; then
+    echo "$bin_path does not exist. You may need sudo privileges to create it."
+    read -p "Do you need sudo privileges? (y/n): " use_sudo
+    if [ "$use_sudo" == "y" ]; then
+        sudo mkdir -p "$bin_path"
+        sudo cp bin/rawtoaces_gui "$bin_path"
+    else
+        mkdir -p "$bin_path"
+        cp bin/rawtoaces_gui "$bin_path"
+    fi
+fi
+
+# Ask user if they want to add the bin folder to $PATH
+read -p "Do you want to add $bin_path to your PATH? (y/n): " add_to_path
+if [ "$add_to_path" == "y" ]; then
+    echo "export PATH=\$PATH:$bin_path" >> ~/.bashrc
+    echo "Added $bin_path to your PATH. Please restart your terminal or run 'source ~/.bashrc' to apply changes."
+fi
+
+echo "RawToAces and RawToAces_gui installed."
