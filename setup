@@ -245,11 +245,10 @@ sed -i "s|export RAW_TO_ACES_GUI_INSTALL_PATH=\".*\"|export RAW_TO_ACES_GUI_INST
 
 # Ask user for the bin folder installation path
 read -p "Enter path to install rawtoaces_gui from bin (recommended: /usr/bin): " bin_path
-
+read -p "Do you need sudo privileges? (y/n): " use_sudo
 # Check if the bin_path exists and if sudo privileges are needed
 if [ ! -d "$bin_path" ]; then
     echo "$bin_path does not exist. You may need sudo privileges to create it."
-    read -p "Do you need sudo privileges? (y/n): " use_sudo
     if [ "$use_sudo" == "y" ]; then
         sudo mkdir -p "$bin_path"
         sudo cp bin/rawtoaces_gui "$bin_path"
