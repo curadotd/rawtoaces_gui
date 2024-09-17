@@ -83,7 +83,7 @@ if [ -d $build_path/rawtoaces ]; then
   cd $build_path/rawtoaces
   git pull
 else
-  git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
+  git clone https://github.com/wetadigital/rawtoaces.git
   cd rawtoaces
 fi
 #create build directory
