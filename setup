@@ -162,7 +162,7 @@ elif command -v dnf &> /dev/null; then
 
   mkdir build_ceres && cd build_ceres
 
-  cmake \
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
   -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF \
   ..
 
@@ -191,8 +191,8 @@ elif command -v dnf &> /dev/null; then
   -DCMAKE_CXX_STANDARD=11 -DCMAKE_C_COMPILER=/usr/bin/gcc \
   -D_IlmBase_HINT_LIB=/usr/lib64 \
   -DIlmBase_INCLUDE_DIR=/usr/include/Imath \
-  -D_libraw_HINT_LIB=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/lib \
-  -D_libraw_HINT_INCLUDE=$build_path/rawtoaces/_build/raw_to_aces_deps_ceres_solver/install/include/libraw \
+  -D_libraw_HINT_LIB=/usr/local/lib \
+  -D_libraw_HINT_INCLUDE=/usr/local/include/rawtoaces \
   -DCERES_INCLUDE_DIRS=/usr/include/ceres \
   -DCERES_LIBRARY_DIRS=/usr/lib64 \
   -DAcesContainer_INCLUDE_DIRS=/usr/include/aces/ \
