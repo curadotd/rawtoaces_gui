@@ -36,7 +36,7 @@ elif command -v dnf &> /dev/null; then
     dnf config-manager --enable crb
     sudo dnf install cmake autoconf automake libtool pkg-config boost-devel gcc glog-devel gflags-devel \
     openexr-devel eigen3-devel g++ libjpeg-devel libjasper-devel lcms2-devel suitesparse-devel metis-devel \
-    tbb-devel blas-devel lapack-devel openblas-serial ilmbase-devel python-pip
+    tbb-devel blas-devel lapack-devel openblas-serial ilmbase-devel python-pip xcb-util-cursor
 elif command -v apt &> /dev/null; then
     # Debian Linux
     sudo apt update
