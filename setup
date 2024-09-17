@@ -175,12 +175,14 @@ cd $build_path/rawtoaces/_build
 
 #Raw to Aces build and install.
 if command -v pacman &> /dev/null; then
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib \
+  -D_libraw_HINT_LIB=/usr/lib/ -D_libraw_HINT_INCLUDE=/usr/include/ ..
   make -j 4
   make test
   sudo make install
 elif command -v apt &> /dev/null; then
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DAcesContainer_INCLUDE_DIRS=/usr/include/aces -DAcesContainer_LIBRARY_DIRS=/usr/lib \
+  -D_libraw_HINT_LIB=/usr/lib/ -D_libraw_HINT_INCLUDE=/usr/include/ ..
   make -j 4
   make test
   sudo make install
