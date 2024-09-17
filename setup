@@ -85,7 +85,6 @@ if [ -d $build_path/rawtoaces ]; then
 else
   git clone https://github.com/AcademySoftwareFoundation/rawtoaces.git
   cd rawtoaces
-  git checkout e022b7e78baa8cdc3475ff7b42137a23579961fd
 fi
 #create build directory
 mkdir _build && cd _build
