@@ -136,7 +136,7 @@ elif command -v dnf &> /dev/null; then
 
   make -j 4
 
-  make install
+  sudo make install
 fi
 
 #Ceres Solver build and install.
@@ -168,7 +168,7 @@ elif command -v dnf &> /dev/null; then
 
   make -j 8
 
-  make install
+  sudo make install
 fi
 
 cd $build_path/rawtoaces/_build
@@ -203,7 +203,7 @@ elif command -v dnf &> /dev/null; then
   
   make test
 
-  make install
+  sudo make install
 fi
 
 cd $build_path/rawtoaces/_build
