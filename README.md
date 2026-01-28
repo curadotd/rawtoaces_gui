@@ -56,7 +56,7 @@ https://github.com/mjbacurado/rawtoaces#installation
     Arch
     ```sh
     sudo pacman -S --needed cmake autoconf automake libtool pkg-config boost gcc google-glog gflags openexr \
-    eigen libjpeg-turbo jasper lcms2 suitesparse tbb blas-openblas pyside6 pyside6-tools
+    eigen libjpeg-turbo jasper lcms2 suitesparse tbb blas-openblas pyside6 pyside6-tools nlohmann-json
 
     yay -S --needed metis openblas-lapack
     ```
